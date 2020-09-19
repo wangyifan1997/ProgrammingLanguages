@@ -72,8 +72,27 @@ fun number_before_reaching_sum(sum: int, nums: int list) =
 (* #9 *)
 fun what_month(day: int) =
     let
-      val months = [31,28,31,30,31,30,31,31,30,31,30,31]
+      val months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     in
       1 + number_before_reaching_sum(365, months)
     end
 
+(* #10 *)
+fun month_range(day1: int, day2: int) = 
+	if day1 >= day2
+	then []
+	else what_month(day1) :: month_range(day1 + 1, day2)
+
+(* #11 *)
+fun oldest(dates: (int*int*int) list) = 
+	if null dates
+	then NONE
+	else
+		let
+		  val old = oldest(tl dates)
+		  val curr = hd dates
+		in
+		  if isSome old andalso is_older(valOf old, curr)
+		  then old
+		  else SOME curr
+		end
