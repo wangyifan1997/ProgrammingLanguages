@@ -51,3 +51,17 @@ val test9_3 = what_month 32 = 2
 val test10 = month_range (31, 34) = [1,2,2,2]
 
 val test11 = oldest([(2012,2,28),(2011,3,31),(2011,4,28)]) = SOME (2011,3,31)
+
+val test13_1 = reasonable_date((2020, 2, 29)) = true
+
+val test13_2 = reasonable_date((2019, 2, 29)) = false
+
+val test13_3 = reasonable_date((2013, 1, 31)) = true
+
+val test13_4 = reasonable_date((~3, 2, 4)) = false
+
+val test13_5 = reasonable_date((2000, 2, 29)) = true
+
+val test13_6 = reasonable_date((2100, 2, 29)) = false
+
+val test13_7 = reasonable_date((2002, 4, 31)) = false

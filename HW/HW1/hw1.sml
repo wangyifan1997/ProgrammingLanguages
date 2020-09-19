@@ -48,7 +48,7 @@ fun dates_in_months(dates: (int*int*int) list, months: int list) =
 fun get_nth(strings: string list, n: int) =
     if n = 1
     then hd strings
-    else get_nth(tl strings, n-1)
+    else get_nth(tl strings, n - 1)
 
 (* #7 *)
 fun date_to_string(date: int*int*int) =
@@ -92,3 +92,52 @@ fun oldest(dates: (int*int*int) list) =
 		  then old
 		  else SOME curr
 		end
+
+(* #12 assume months are sorted *)
+fun remove_duplicates(xs: int list) = 
+	if null xs
+	then []
+	else
+		let
+			val res = remove_duplicates(tl xs)
+			val curr = hd xs
+			val next = hd res
+		in
+		  	if null res orelse curr <> next
+			then curr :: res
+			else res
+		end
+
+fun number_in_months_challenge(dates: (int*int*int) list, months: int list) =
+	number_in_months(dates, remove_duplicates(months))
+
+fun dates_in_months_challenge(dates: (int*int*int) list, months: int list) = 
+	dates_in_months(dates, remove_duplicates(months))
+
+(* #13 *)
+fun reasonable_date(date: int*int*int) =
+	let
+		val year = #1 date
+		val month = #2 date
+		val day = #3 date
+
+		fun is_leap_year() =
+			year mod 400 = 0 orelse (year mod 4 = 0 andalso year mod 100 <> 0)
+		
+		val leap_year_days = [31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+		val non_leap_year_days = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
+		fun get_nth_month(n: int, months: int list) = 
+			if n = 1
+    		then hd months
+    		else get_nth_month(n - 1, tl months)
+	in
+		if year <= 0
+	  	then false
+	  	else
+		  	if month > 12 orelse month < 1
+			then false
+			else
+				if is_leap_year()
+				then day <= get_nth_month(month, leap_year_days) andalso day > 0
+				else day <= get_nth_month(month, non_leap_year_days) andalso day > 0
+	end
