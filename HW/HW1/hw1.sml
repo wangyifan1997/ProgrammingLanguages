@@ -20,8 +20,8 @@ fun number_in_month(dates: (int*int*int) list, month: int) =
     then 0
     else
         if #2 (hd dates) = month
-        then 1 + number_int_month(tl dates, month)
-        else number_int_month(tl dates, month)
+        then 1 + number_in_month(tl dates, month)
+        else number_in_month(tl dates, month)
 
 (* #3 *)
 fun number_in_months(dates: (int*int*int) list, months: int list) =
@@ -60,26 +60,22 @@ fun date_to_string(date: int*int*int) =
 
 (* #8 *)
 fun number_before_reaching_sum(sum: int, nums: int list) =
-    let
-      val this = hd nums
-      val next = hd (tl nums)
-    in
-      if this + next > sum
-      then 1
-      else 1 + number_before_reaching_sum(sum-this, tl nums)
-    end
+    if hd nums >= sum
+    then 0
+    else 1 + number_before_reaching_sum(sum - hd nums, tl nums)
+
 
 (* #9 *)
 fun what_month(day: int) =
     let
       val months = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
     in
-      1 + number_before_reaching_sum(365, months)
+      1 + number_before_reaching_sum(day, months)
     end
 
 (* #10 *)
 fun month_range(day1: int, day2: int) = 
-	if day1 >= day2
+	if day1 > day2
 	then []
 	else what_month(day1) :: month_range(day1 + 1, day2)
 
