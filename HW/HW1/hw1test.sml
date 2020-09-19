@@ -65,3 +65,11 @@ val test13_5 = reasonable_date((2000, 2, 29)) = true
 val test13_6 = reasonable_date((2100, 2, 29)) = false
 
 val test13_7 = reasonable_date((2002, 4, 31)) = false
+
+val test_remove_duplicates_1 = remove_duplicates([1, 2, 2, 3, 3, 4]) = [1, 2, 3, 4]
+
+val test_remove_duplicates_2 = remove_duplicates([1, 2, 3, 4]) = [1, 2, 3, 4]
+
+val test_remove_duplicates_3 = remove_duplicates([1]) = [1]
+
+val test_remove_duplicates_4 = remove_duplicates([1, 1, 2, 10, 11]) = [1, 2, 10, 11]

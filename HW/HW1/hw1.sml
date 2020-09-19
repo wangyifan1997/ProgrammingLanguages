@@ -101,9 +101,8 @@ fun remove_duplicates(xs: int list) =
 		let
 			val res = remove_duplicates(tl xs)
 			val curr = hd xs
-			val next = hd res
 		in
-		  	if null res orelse curr <> next
+		  if null res orelse curr <> hd res
 			then curr :: res
 			else res
 		end
