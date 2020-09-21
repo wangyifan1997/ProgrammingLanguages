@@ -73,3 +73,5 @@ val test_remove_duplicates_2 = remove_duplicates([1, 2, 3, 4]) = [1, 2, 3, 4]
 val test_remove_duplicates_3 = remove_duplicates([1]) = [1]
 
 val test_remove_duplicates_4 = remove_duplicates([1, 1, 2, 10, 11]) = [1, 2, 10, 11]
+
+val test_remove_duplicates_5 = remove_duplicates([5, 2, 2, 5, 5]) = [2, 5]

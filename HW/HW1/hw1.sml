@@ -93,19 +93,27 @@ fun oldest(dates: (int*int*int) list) =
 		  else SOME curr
 		end
 
-(* #12 assume months are sorted *)
+(* #12 *)
 fun remove_duplicates(xs: int list) = 
-	if null xs
-	then []
-	else
-		let
-			val res = remove_duplicates(tl xs)
-			val curr = hd xs
-		in
-		  if null res orelse curr <> hd res
-			then curr :: res
-			else res
-		end
+	let
+		fun contain_duplicate(num: int, ys: int list) = 
+			if null ys
+			then false
+			else (num = hd ys) orelse contain_duplicate(num, tl ys)
+	in
+		if null xs
+		then []
+		else
+			let
+				val res = remove_duplicates(tl xs)
+				val curr = hd xs
+				val is_duplicate = contain_duplicate(curr, res)
+			in
+				if null res orelse not is_duplicate
+				then curr :: res
+				else res
+			end
+	end
 
 fun number_in_months_challenge(dates: (int*int*int) list, months: int list) =
 	number_in_months(dates, remove_duplicates(months))
