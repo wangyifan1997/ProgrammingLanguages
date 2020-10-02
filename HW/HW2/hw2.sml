@@ -14,8 +14,8 @@ fun all_except_option (x: string, xs: string list) =
         [] => NONE
     |   y :: ys => 
             case all_except_option(x, ys) of
-                NONE => if same_string(x, y) then SOME ys else SOME (x :: ys)
-            |   SOME lst => SOME (x :: lst)
+                NONE => if same_string(x, y) then SOME ys else NONE
+            |   SOME lst => SOME (y :: lst)
 
 (* 1b *)
 fun get_substitutions1 (xs: string list list, x: string) =
@@ -31,11 +31,11 @@ fun get_substitutions2 (xs: string list list, x: string) =
     let
         fun helper(xs: string list list, x: string, acc: string list) =
             case xs of
-                [] => []
+                [] => acc
             |   y :: ys =>
                     case all_except_option(x, y) of
                         NONE => helper(ys, x, acc)
-                    |   SOME lst => helper(ys, x, lst @ acc)
+                    |   SOME lst => helper(ys, x, (acc @ lst))
     in
         helper(xs, x, [])
     end
