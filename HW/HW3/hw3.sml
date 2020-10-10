@@ -61,5 +61,38 @@ fun longest_capitalized(xs: string list) = longest_string1 o only_capitals
 (* 6 *)
 fun rev_string(x: string) = String.implode o rev o String.explode
 
+(* 7 *)
+fun first_answer(f: ('a -> 'b option)) =
+    foldr 
+        (fn (x, rtn) => 
+            case f x of
+                SOME v => v
+            |   NONE => rtn)
+        (raise NoAnswer)
+
+(* 8 *)
+fun all_answers f =
+    let
+        fun helper (xs, acc) =
+            case xs of
+                [] => acc
+            |   x :: xs' => 
+                case f x of
+                    SOME lst => helper(xs', lst @ acc)
+                |   _ => helper(xs', acc)
+    in
+        fn xs =>
+            if List.all (fn a => case f a of SOME lst => true | NONE => false) xs
+            then SOME (helper(xs, []))
+            else NONE
+    end
+
+
+    (* foldr
+        (fn (x, rtn) =>
+            case (f x, rtn) of
+                (SOME lst, SOME lstx) => SOME (lst @ lstx)
+            |   _ => NONE)
+        SOME [] *)
 
 
