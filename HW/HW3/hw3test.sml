@@ -31,3 +31,23 @@ val test5_2 = longest_capitalized(["a", "ab", "abc"]) = ""
 val test6_1 = (rev_string "") = ""
 
 val test6_2 = (rev_string "abc") = "cba"
+
+fun num_greater_than3 x = if x > 3 then SOME x else NONE
+
+val test7_1 = first_answer (num_greater_than3) [1, 4, 3, 5, 2] = 4
+
+val test7_2 = first_answer (num_greater_than3) [1, 2, 3, 4] = 4
+
+val test10_1 = check_pat (TupleP[Variable "x",Variable "x"]) = false
+
+val test10_2 = check_pat (TupleP[ConstP 17,Wildcard,ConstP 4,ConstructorP ("egg",ConstP 4),ConstructorP ("egg",ConstructorP ("egg",ConstP 4))]) = true
+
+val test10_3 = check_pat (TupleP[TupleP[TupleP[Variable "x",ConstructorP ("wild",Wildcard)],Wildcard],Variable "x"]) = false
+
+val test12_1 = first_match (Const 17,[Wildcard,ConstP 17]) = SOME []
+
+val test12_2 = first_match (Const 17,[ConstP 17,Wildcard]) = SOME []
+
+val test12_3 = first_match (Constructor ("egg",Const 4),[ConstructorP ("egg",ConstP 4)]) = SOME []
+
+val test12_4 = first_match (Tuple[Const 17,Unit,Const 4,Constructor ("egg",Const 4),Constructor ("egg",Constructor ("egg",Const 4)),Tuple[Const 17,Unit,Const 4,Constructor ("egg",Const 4),Constructor ("egg",Constructor ("egg",Const 4))],Tuple[Unit,Unit],Tuple[Const 17,Const 4],Tuple[Constructor ("egg",Const 4),Constructor ("egg",Const 4)]],[ConstP 17,ConstP 4,ConstructorP ("egg",ConstP 4),ConstructorP ("egg",ConstructorP ("egg",ConstP 4)),TupleP[ConstP 17,Wildcard,ConstP 4,ConstructorP ("egg",ConstP 4),ConstructorP ("egg",ConstructorP ("egg",ConstP 4))],TupleP[Wildcard,Wildcard],TupleP[ConstP 17,ConstP 4],TupleP[ConstructorP ("egg",ConstP 4),ConstructorP ("egg",ConstP 4)],TupleP[ConstP 17,Wildcard,ConstP 4,ConstructorP ("egg",ConstP 4),ConstructorP ("egg",ConstructorP ("egg",ConstP 4)),TupleP[ConstP 17,Wildcard,ConstP 4,ConstructorP ("egg",ConstP 4),ConstructorP ("egg",ConstructorP ("egg",ConstP 4))],TupleP[Wildcard,Wildcard],TupleP[ConstP 17,ConstP 4],TupleP[ConstructorP ("egg",ConstP 4),ConstructorP ("egg",ConstP 4)]]]) = SOME []

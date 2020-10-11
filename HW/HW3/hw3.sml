@@ -1,5 +1,3 @@
-(* Coursera Programming Languages, Homework 3, Provided Code *)
-
 exception NoAnswer
 
 datatype pattern = Wildcard
@@ -26,15 +24,11 @@ fun g f1 f2 p =
 	  | _                 => 0
     end
 
-(**** for the challenge problem only ****)
-
 datatype typ = Anything
 	     | UnitT
 	     | IntT
 	     | TupleT of typ list
 	     | Datatype of string
-
-(**** you can put all your code here ****)
 
 (* 1 *)
 fun only_capitals(xs: string list) =
@@ -63,12 +57,17 @@ fun rev_string (x: string) = (String.implode o List.rev o String.explode) x
 
 (* 7 *)
 fun first_answer(f: ('a -> 'b option)) =
-    foldr 
-        (fn (x, rtn) => 
-            case f x of
-                SOME v => v
-            |   NONE => rtn)
-        (raise NoAnswer)
+    let 
+        fun helper xs =
+            case xs of
+                [] => raise NoAnswer
+            |   x :: xs' =>
+                    case f x of
+                        SOME v => v
+                    |   NONE => helper(xs')
+    in
+        helper
+    end     
 
 (* 8 *)
 fun all_answers f =
@@ -101,7 +100,7 @@ fun check_pat (p: pattern) =
             case p of
                 Wildcard => []
             |   Variable x => [x]    
-            |   TupleP ps => (List.foldl (fn (p', rtn) => (all_strings p) @ rtn) [] ps)
+            |   TupleP ps => (List.foldl (fn (p', rtn) => (all_strings p') @ rtn) [] ps)
             |   ConstructorP(_, p) => all_strings(p)
             |   _ => []
         fun all_unique (xs: string list) =
@@ -124,13 +123,12 @@ fun match (v: valu, p: pattern) =
     |   (Const a, ConstP b) => if a = b then SOME [] else NONE
     |   (Tuple vs, TupleP ps) => 
             if (List.length vs) = (List.length ps)
-            then all_answers (fn (v, p) => match (v, p)) (ListPair.zip (vs, ps))
+            then all_answers (fn (v', p') => match (v', p')) (ListPair.zip (vs, ps))
             else NONE
     |   (Constructor(s2, v), ConstructorP(s1, p)) => if s1 = s2 then match(v, p) else NONE
     |   _ => NONE
 
 (* 12 *)
-fun first_match (v: valu) =
-    fn ps => 
-        SOME (first_answer (fn p => match (v, p)) ps)
-        handle NoAnswer => NONE 
+fun first_match (v: valu, ps: pattern list) =
+    SOME (first_answer (fn p => match (v, p)) ps)
+    handle NoAnswer => NONE 
