@@ -34,26 +34,40 @@ datatype typ = Anything
 fun only_capitals(xs: string list) =
     List.filter (fn x => Char.isUpper(String.sub(x, 0))) xs
 
+val only_capitals_new = List.filter (fn x => Char.isUpper(String.sub(x, 0)))
+
 (* 2 *)
 fun longest_string1(xs: string list) = 
     List.foldl (fn (x, longest) => if String.size(x) > String.size(longest) then x else longest) "" xs
 
+val longest_string1_new = List.foldl (fn (x, longest) => if String.size(x) > String.size(longest) then x else longest) ""
+
 (* 3 *)
 fun longest_string2(xs: string list) =
     List.foldl (fn (x, longest) => if String.size(x) >= String.size(longest) then x else longest) "" xs
+
+val longest_string2_new = List.foldl (fn (x, longest) => if String.size(x) >= String.size(longest) then x else longest) ""
 
 (* 4 *)
 fun longest_string_helper(f) = List.foldl (fn (x, longest) => if f((String.size x), (String.size longest)) then x else longest) ""
 
 val longest_string3 = longest_string_helper(fn (x, y) => x > y)
 
+val longest_string3_new = longest_string_helper op>
+
 val longest_string4 = longest_string_helper(fn (x, y) => x >= y)
+
+val longest_string4_new = longest_string_helper op>=
 
 (* 5 *)
 fun longest_capitalized (xs: string list) = (longest_string1 o only_capitals) xs
 
+val longest_capitalized_new = longest_string1 o only_capitals
+
 (* 6 *)
 fun rev_string (x: string) = (String.implode o List.rev o String.explode) x
+
+val rev_string_new = String.implode o List.rev o String.explode
 
 (* 7 *)
 fun first_answer(f: ('a -> 'b option)) =
@@ -68,6 +82,14 @@ fun first_answer(f: ('a -> 'b option)) =
     in
         helper
     end     
+
+fun first_answer_new f xs =
+    case xs of
+        [] => raise NoAnswer
+    |   x :: xs' =>
+            case f x of
+                SOME v => v
+            |   NONE => first_answer_new f xs'
 
 (* 8 *)
 fun all_answers f =
@@ -86,10 +108,25 @@ fun all_answers f =
             else NONE
     end
 
+fun all_answers_new f =
+    let
+        fun loop acc xs =
+            case xs of
+                [] => SOME acc
+            |   x :: xs' =>
+                case f x of
+                    SOME lst => loop (lst @ acc) xs'
+                |   NONE => NONE
+    in loop [] end
+
 (* 9 *)
 fun count_wildcards (p: pattern) = g (fn () => 1) (fn x => 0) p
 
+val count_wildcards_new = g (fn () => 1) (fn x => 0)
+
 fun count_wild_and_variable_lengths (p: pattern) = g (fn () => 1) (fn x => String.size x) p
+
+val count_wild_and_variable_lengths_new = g (fn () => 1) String.size
 
 fun count_some_var (x: string, p: pattern) = g (fn () => 0) (fn s => if s = x then 1 else 0) p
 
@@ -128,8 +165,26 @@ fun match (v: valu, p: pattern) =
     |   (Constructor(s2, v), ConstructorP(s1, p)) => if s1 = s2 then match(v, p) else NONE
     |   _ => NONE
 
+fun match_new (v: valu, p: pattern) = 
+    case (v, p) of
+        (_, Wildcard) => SOME []
+    |   (_, Variable s) => SOME [(s, v)]
+    |   (Unit, UnitP) => SOME []
+    |   (Const a, ConstP b) => if a = b then SOME [] else NONE
+    |   (Tuple vs, TupleP ps) => 
+            if (List.length vs) = (List.length ps)
+            then all_answers match_new (ListPair.zip (vs, ps))
+            else NONE
+    |   (Constructor(s2, v), ConstructorP(s1, p)) => if s1 = s2 then match_new(v, p) else NONE
+    |   _ => NONE
+
 (* 12 *)
 fun first_match (v: valu) =
     fn ps =>
         SOME (first_answer (fn p => match (v, p)) ps)
         handle NoAnswer => NONE 
+
+fun first_match_new v ps =
+    SOME (first_answer (fn p => match (v, p)) ps)
+    handle NoAnswer => NONE 
+
