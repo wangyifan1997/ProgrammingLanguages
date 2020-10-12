@@ -43,11 +43,11 @@ fun longest_string2(xs: string list) =
     List.foldl (fn (x, longest) => if String.size(x) >= String.size(longest) then x else longest) "" xs
 
 (* 4 *)
-fun longest_string_helper(f) = List.foldl (fn (x, longest) => if f(x, longest) then x else longest) ""
+fun longest_string_helper(f) = List.foldl (fn (x, longest) => if f((String.size x), (String.size longest)) then x else longest) ""
 
-val longest_string3 = longest_string_helper(fn (x, y) => String.size x > String.size y)
+val longest_string3 = longest_string_helper(fn (x, y) => x > y)
 
-val longest_string4 = longest_string_helper(fn (x, y) => String.size x >= String.size y)
+val longest_string4 = longest_string_helper(fn (x, y) => x >= y)
 
 (* 5 *)
 fun longest_capitalized (xs: string list) = (longest_string1 o only_capitals) xs
@@ -129,6 +129,7 @@ fun match (v: valu, p: pattern) =
     |   _ => NONE
 
 (* 12 *)
-fun first_match (v: valu, ps: pattern list) =
-    SOME (first_answer (fn p => match (v, p)) ps)
-    handle NoAnswer => NONE 
+fun first_match (v: valu) =
+    fn ps =>
+        SOME (first_answer (fn p => match (v, p)) ps)
+        handle NoAnswer => NONE 
